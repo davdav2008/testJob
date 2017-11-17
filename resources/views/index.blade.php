@@ -9,12 +9,8 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
     <!-- Styles -->
-    <script
-            src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
@@ -23,53 +19,65 @@
     <thead>
     <tr>
         <th>
-            <a href="{{route('car.sort_by_id')}}"><div>  ID</div></a>
+            <a href="{{route('cars',['sort'=>'id'])}}">
+                <div> ID</div>
+            </a>
         </th>
         <th>
-            <a href="{{route('car.sort_by_brand')}}"><div> Марка</div></a>
+            {{--            <a href="{{route('car.sort_by_brand')}}">--}}
+            <a href="{{route('cars')}}">
+                <div> Марка</div>
+            </a>
         </th>
         <th>
-            <a href="{{route('car.sort_by_model')}}"><div> Модель</div></a>
+            {{--<a href="{{route('car.sort_by_model')}}">--}}
+            <a href="{{route('cars')}}">
+                <div> Модель</div>
+            </a>
         </th>
         <th>
-            <a href="{{route('car.sort_by_cat')}}"><div>  Категория</div></a>
+            {{--            <a href="{{route('car.sort_by_cat')}}">--}}
+            <a href="{{route('cars')}}">
+                <div> Категория</div>
+            </a>
         </th>
         <th>
-            <a href="{{route('car.sort_by_price')}}"><div>  Цена</div></a>
+            {{--            <a href="{{route('car.sort_by_price')}}">--}}
+            <a href="{{route('cars')}}">
+                <div> Цена</div>
+            </a>
         </th>
     </tr>
     </thead>
     <tbody>
 
     @foreach($cars as $car)
-    <tr>
-        <td>
-            {{$car->id}}
-        </td>
-        <td>
-            {{--{{DB::table('brands')->whereId($car->brand_id)->get()->pluck('brand')[0]}}--}}
-            {{$car->brand->brand}}
-        </td>
-        <td>
-            {{--{{DB::table('car_models')->whereId($car->car_model_id)->get()->pluck('name')[0]}}--}}
-            {{$car->model->name}}
-        </td>
-        <td>
-            @if($car->category_id==1)
-                До 1990 года выпуска
-            @elseif($car->category_id==2)
-                От 1990 до 2000 года выпуска
-            @elseif($car->category_id==3)
-                От 2000 до 2010 года выпуска
-            @elseif($car->category_id==4)
-                После 2010 года выпуска
-            @endif
-        </td>
-        <td>
-            {{$car->price}}
-        </td>
-    </tr>
-        @endforeach
+        <tr>
+            <td>
+                {{$car->id}}
+            </td>
+            <td>
+                {{$car->brand->name}}
+            </td>
+            <td>
+                {{$car->model->name}}
+            </td>
+            <td>
+                @if($car->category_id==1)
+                    До 1990 года выпуска
+                @elseif($car->category_id==2)
+                    От 1990 до 2000 года выпуска
+                @elseif($car->category_id==3)
+                    От 2000 до 2010 года выпуска
+                @elseif($car->category_id==4)
+                    После 2010 года выпуска
+                @endif
+            </td>
+            <td>
+                {{$car->price}}
+            </td>
+        </tr>
+    @endforeach
     </tbody>
 </table>
 <a href="/create" class="btn btn-default">Добавить новую машину</a>

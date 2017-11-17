@@ -2,37 +2,54 @@
 
 namespace App\Http\Controllers;
 
-use App\Brand;
-use App\Car;
-use App\CarModel;
+use App\Model\Brand;
+use App\Model\CarModel;
+use App\Model\Car;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
-class CarsController extends Controller
-{
-    private $car;
+class CarsController extends Controller {
 
+    public function index() {
+        $sort = Input::get('sort');
+        switch ($sort) {
+            case 'id':
+                $cars = Car::all()->sortBy('Id');
+                break;
+            case 'brand':
+                $cars = Car::sortByBrand();
+                break;
+            case 'model':
+                $cars = Car::sortByModel();
 
-    public function index()
-    {
-        return view('index', ['cars' => Car::all()]);
+                break;
+            case 'category':
+                $cars = Car::all()->sortBy('category_id');
+                break;
+            case 'price':
+                $cars = Car::all()->sortBy('Id');
+                break;
+            default:
+                $cars = Car::all();
+                break;
+        }
+
+        return view('index', compact('cars'));
     }
 
-    public function create()
-    {
+    public function create() {
         return view('car.create', ['Brand' => Brand::all(), 'Model' => CarModel::all()]);
     }
 
 
-    public function store(Request $request)
-    {
-        $data = Input::get();
+    public function store(Request $request) {
+        $data = $request->all();
 
         $car = new Car;
         $car->fill($data);
 
-        $car->brand_id = DB::table('brands')->whereBrand($data['Brand'])->get()->pluck('id')[0];
+        $car->brand_id = DB::table('brands')->whereName($data['Brand'])->get()->pluck('id')[0];
         $car->car_model_id = DB::table('car_models')->whereName($data['Model'])->get()->pluck('id')[0];
 
         if ($car->year < 1990) {
@@ -49,37 +66,33 @@ class CarsController extends Controller
         return redirect()->route('car.create');
     }
 
-    public function sortById()
-    {
+    public function sortById() {
         return view('index', ['cars' => Car::all()->sortBy('Id')]);
     }
 
-    public function sortByBrand()
-    {
+    public function sortByBrand() {
         $cars = Car::sortByBrand();
         return view('index', ['cars' => $cars]);
     }
+
 //
-    public function sortByModel()
-    {
+    public function sortByModel() {
 
         $cars = Car::sortByModel();
         return view('index', ['cars' => $cars]);
     }
 
-    public function sortByCategory()
-    {
+    public function sortByCategory() {
         return view('index', ['cars' => Car::all()->sortBy('category_id')]);
     }
 
-    public function sortByPrice()
-    {
+    public function sortByPrice() {
         return view('index', ['cars' => Car::all()->sortBy('price')]);
     }
-    public function filter()
-    {
+
+    public function filter() {
         $cars = Car::FilterByYear();
-        return view('index', ['cars' =>$cars]);
+        return view('index', ['cars' => $cars]);
     }
 
 }
